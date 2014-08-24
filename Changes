@@ -1,6 +1,7 @@
 Revision history for Catalyst-Controller-DBIC-API: {{ $dist->version }}
 
 {{ $NEXT }}
+ - Fix links to ::Request::Context
  - Allow creating multiple related objects when updating or creating new
    records (RT#65168)
 

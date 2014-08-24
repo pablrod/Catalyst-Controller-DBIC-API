@@ -260,8 +260,8 @@ This action is the chain root for all object level actions (such as delete and
 update) that operate on a single identifer. The provided identifier will be used
 to find that particular object and add it to the request's store ofobjects.
 
-Please see L<Catalyst::Controller::DBIC::API::Context> for more details on the
-stored objects.
+Please see L<Catalyst::Controller::DBIC::API::Request::Context> for more
+details on the stored objects.
 
 =cut
 
@@ -298,8 +298,8 @@ new object to be created. Otherwise, the values in the hash will be used to
 perform an update. As a special case, a single hash sent will be coerced into
 an array.
 
-Please see L<Catalyst::Controller::DBIC::API::Context> for more details on the
-stored objects.
+Please see L<Catalyst::Controller::DBIC::API::Request::Context> for more
+details on the stored objects.
 
 =cut
 
