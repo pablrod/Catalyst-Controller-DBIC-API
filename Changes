@@ -1,6 +1,7 @@
 Revision history for Catalyst-Controller-DBIC-API: {{ $dist->version }}
 
 {{ $NEXT }}
+ - Fix links to ::Request::Context
 
 2.005001  2014-01-13 21:43:59+01:00 Europe/Vienna
  - Fixed test failures with JSON 2.90 (RT#90188, thanks Samuel Kaufman!)
