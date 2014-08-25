@@ -1,6 +1,8 @@
 Revision history for Catalyst-Controller-DBIC-API: {{ $dist->version }}
 
 {{ $NEXT }}
+
+2.006001  2014-08-25 18:27:26+02:00 Europe/Vienna
  - Fix links to ::Request::Context
  - Add support for the -and, -not and -or operators (RT93864)
 
