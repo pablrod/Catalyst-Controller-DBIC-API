@@ -1324,11 +1324,14 @@ The validator is set in "loose" mode meaning only one path is required to match.
 For more information, please see L<Data::DPath::Validator> and more specifically
 L<Catalyst::Controller::DBIC::API::Validator>.
 
-Since 2.00100:
+Since 2.001:
 Transactions are used. The stash is put aside in favor of roles applied to the
 request object with additional accessors.
 Error handling is now much more consistent with most errors immediately detaching.
 The internals are much easier to read and understand with lots more documentation.
+
+Since 2.006:
+The SQL::Abstract -and, -not and -or operators are supported.
 
 =cut
 

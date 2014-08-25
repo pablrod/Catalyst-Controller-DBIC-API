@@ -443,16 +443,20 @@ JoinBuilder each layer of recursion.
         $base ||= 'me';
         my $search_params = {};
 
+        # return non-hashref params unaltered
+        return $param
+            unless ref $param eq 'HASH';
+
         # build up condition
         foreach my $column ( keys %$param ) {
+            my $value = $param->{$column};
             if ( $source->has_relationship($column) ) {
 
                 # check if the value isn't a hashref
-                unless ( ref( $param->{$column} )
-                    && reftype( $param->{$column} ) eq 'HASH' )
+                unless ( ref $value eq 'HASH' )
                 {
                     $search_params->{ join( '.', $base, $column ) } =
-                        $param->{$column};
+                        $value;
                     next;
                 }
 
@@ -460,7 +464,7 @@ JoinBuilder each layer of recursion.
                     %$search_params,
                     %{  $self->generate_column_parameters(
                             $source->related_source($column),
-                            $param->{$column},
+                            $value,
                             Catalyst::Controller::DBIC::API::JoinBuilder->new(
                                 parent => $join,
                                 name   => $column
@@ -474,19 +478,41 @@ JoinBuilder each layer of recursion.
                 $search_params->{ join( '.', $base, $column ) } =
                     $param->{$column};
             }
+            elsif ( $column eq '-or' || $column eq '-and' || $column eq '-not' ) {
+                # either an arrayref or hashref
+                if ( ref $value  eq 'HASH' ) {
+                    $search_params->{$column} = $self->generate_column_parameters(
+                        $source,
+                        $value,
+                        $join,
+                        $base,
+                    );
+                }
+                elsif ( ref $value eq 'ARRAY' ) {
+                    push @{$search_params->{$column}},
+                        $self->generate_column_parameters(
+                            $source,
+                            $_,
+                            $join,
+                            $base,
+                        )
+                        for @$value;
+                }
+                else {
+                    die "unsupported value '$value' for column '$column'\n";
+                }
+            }
 
             # might be a sql function instead of a column name
             # e.g. {colname => {like => '%foo%'}}
             else {
                 # but only if it's not a hashref
-                unless ( ref( $param->{$column} )
-                    && reftype( $param->{$column} ) eq 'HASH' )
-                {
+                unless ( ref $value eq 'HASH' ) {
                     $search_params->{ join( '.', $base, $column ) } =
                         $param->{$column};
                 }
                 else {
-                    die "$column is neither a relationship nor a column\n";
+                    die "unsupported value '$value' for column '$column'\n";
                 }
             }
         }

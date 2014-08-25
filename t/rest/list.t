@@ -12,6 +12,7 @@ use Test::More;
 use Test::WWW::Mechanize::Catalyst 'RestTest';
 use HTTP::Request::Common;
 use JSON;
+use Data::Printer;
 
 my $json = JSON->new->utf8;
 
@@ -210,6 +211,128 @@ my $track_list_url           = "$base/api/rest/track";
     );
 }
 
+# -and|-or condition
+{
+    my @variants = (
+        # -or
+        {
+            search => {
+                title => [qw(Yowlin Howlin)],
+            },
+        },
+        {
+            search => {
+                -or => [
+                    title => [qw(Yowlin Howlin)],
+                ],
+            },
+        },
+        {
+            search => {
+                -or => [
+                    title => [qw(Yowlin)],
+                    title => [qw(Howlin)],
+                ],
+            },
+        },
+        {
+            search => {
+                -or => [
+                    { title => [qw(Yowlin)] },
+                    { title => [qw(Howlin)] },
+                ],
+            },
+        },
+        # -and
+        {
+            search => {
+                cd => 2,
+                position => [1, 2],
+            },
+        },
+        {
+            search => {
+                -and => [
+                    cd => 2,
+                    position => [1, 2],
+                ],
+            },
+        },
+        # -and & -or
+        {
+            search => {
+                -or => [
+                    -and => [
+                        cd => 2,
+                        position => [0, 1],
+                    ],
+                    -and => [
+                        cd => 2,
+                        position => [0, 2],
+                    ],
+                ],
+            },
+        },
+        {
+            search => {
+                -or => [
+                    {
+                        -and => [
+                            cd => 2,
+                            position => [0, 1],
+                        ],
+                    },
+                    {
+                        -and => [
+                            cd => 2,
+                            position => [0, 2],
+                        ],
+                    },
+                ],
+            },
+        },
+        {
+            search => {
+                -or => [
+                    {
+                        -and => [
+                            cd => 2,
+                            position => [0, 1],
+                        ],
+                    },
+                    {
+                        -and => [
+                            cd => 2,
+                            position => [0, 2],
+                        ],
+                    },
+                ],
+            },
+        },
+    );
+
+    for my $case ( @variants ) {
+        is $schema->resultset('Track')->search($case->{search})->count, 2, 'check -and|-or search param correctness';
+
+        my $uri = URI->new($track_list_url);
+        $uri->query_form( map { $_ => encode_json($case->{$_}) } keys %$case );
+        my $req = GET( $uri, 'Accept' => 'text/x-json' );
+        $mech->request($req);
+        cmp_ok( $mech->status, '==', 200, 'attempt with -or search okay' );
+        my $response          = $json->decode( $mech->content );
+        my @expected_response = map {
+            { $_->get_columns }
+        } $schema->resultset('Track')->search($case->{search})->all;
+        is_deeply(
+            $response,
+            # track does set use_json_boolean
+            { list => \@expected_response, success => JSON::true, totalcount => 2 },
+            'correct data returned for -and|-or search param'
+        )
+            or diag p($case) . p($response);
+    }
+}
+
 {
     my $uri = URI->new($artist_list_url);
     $uri->query_form( { 'search.cds.track.title' => 'Suicidal' } );
@@ -218,9 +341,9 @@ my $track_list_url           = "$base/api/rest/track";
     cmp_ok( $mech->status, '==', 400,
         'attempt with nonexisting relationship fails' );
     my $response = $json->decode( $mech->content );
-    is_deeply(
-        $response->{messages},
-        ['track is neither a relationship nor a column'],
+    like(
+        $response->{messages}->[0],
+        qr/unsupported value 'HASH\([^\)]+\)' for column 'track'/,
         'correct error message returned'
     );
 }
