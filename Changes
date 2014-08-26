@@ -1,6 +1,8 @@
 Revision history for Catalyst-Controller-DBIC-API: {{ $dist->version }}
 
 {{ $NEXT }}
+
+2.006002  2014-08-26 12:31:27+02:00 Europe/Vienna
  - Fix missing Data::Printer test requirement
 
 2.006001  2014-08-25 18:27:26+02:00 Europe/Vienna
