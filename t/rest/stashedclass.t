@@ -12,7 +12,6 @@ use Test::More;
 use Test::WWW::Mechanize::Catalyst 'RestTest';
 use HTTP::Request::Common;
 use JSON;
-use Data::Dumper;
 
 my $json = JSON->new->utf8;
 
