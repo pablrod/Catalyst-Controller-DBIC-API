@@ -63,7 +63,8 @@ __PACKAGE__->config();
       ],
       ordered_by       => ['age'],
       search_exposes   => ['age', 'nickname', { cds => ['title', 'year'] }],
-      data_root        => 'data',
+      data_root        => 'list',
+      item_root        => 'data',
       use_json_boolean => 1,
       return_object    => 1,
       );
@@ -1140,10 +1141,16 @@ Controls where in stash request_data should be stored, and defaults to 'response
 
 =head3 data_root
 
-By default, the response data is serialized into
+By default, the response data of multiple item actions is serialized into
 $c->stash->{$self->stash_key}->{$self->data_root} and data_root defaults to
 'list' to preserve backwards compatibility. This is now configuable to meet
 the needs of the consuming client.
+
+=head3 item_root
+
+By default, the response data of single item actions is serialized into
+$c->stash->{$self->stash_key}->{$self->item_root} and item_root default to
+'data'.
 
 =head3 use_json_boolean
 

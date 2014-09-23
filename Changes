@@ -1,6 +1,7 @@
 Revision history for Catalyst-Controller-DBIC-API: {{ $dist->version }}
 
 {{ $NEXT }}
+  - Improve data_root & item_root documentation
 
 2.006002  2014-08-26 12:31:27+02:00 Europe/Vienna
  - Fix missing Data::Printer test requirement
