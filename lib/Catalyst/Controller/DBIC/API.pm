@@ -164,7 +164,7 @@ sub deserialize : Chained('setup') : CaptureArgs(0) : PathPart('') :
             @{  [   $self->search_arg,     $self->count_arg,
                     $self->page_arg,       $self->offset_arg,
                     $self->ordered_by_arg, $self->grouped_by_arg,
-                    $self->prefetch_arg
+                    $self->prefetch_arg, $self->bind_arg
                 ]
             }
             )
@@ -477,6 +477,10 @@ sub list_perform_search {
     try {
         my $req = $c->req;
 
+        my $search_attributes = $req->search_attributes;
+        if ($req->has_bind) {
+            $search_attributes->{$self->bind_arg} = $req->bind;
+        }
         my $rs =
             $req->current_result_set->search( $req->search_parameters,
             $req->search_attributes );

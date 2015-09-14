@@ -224,6 +224,20 @@ Please see L</generate_parameters_attributes> for details on how the format work
 
         },
     );
+=attribute_bind
+
+Stores the formatted bind parameters that will be passed to ->search.
+
+=cut
+
+has 'bind' => (
+        is => 'ro',
+        writer => '_set_bind',
+        isa => BindParameters,
+        predicate => 'has_bind',
+        coerce => 1
+    );
+
 
 =attribute_public search_parameters
 

@@ -141,6 +141,14 @@ Controls how to reference 'offset' in the the request_data, defaults to
 
 has 'offset_arg' => ( is => 'ro', isa => Str, default => 'list_offset' );
 
+=attribute_public bind_arg
+
+Controls how to reference 'bind' in the request_data, defaults to 'bind'.
+
+=cut
+
+has 'bind_arg' => ( is => 'ro', isa => Str, default => 'bind' );
+
 =attribute_public select_arg
 
 Controls how to reference 'select' in the the request_data, defaults to

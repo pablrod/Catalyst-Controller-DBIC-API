@@ -65,6 +65,15 @@ Coerces HashRef.
 subtype SearchParameters, as Maybe[ArrayRef[HashRef]];
 coerce SearchParameters, from HashRef, via { [$_] };
 
+=type BindParameters as Maybe[ArrayRef[Str|HashRef|ScalarRef]]
+
+Represents the structure of the bind argument
+
+=cut
+
+subtype BindParameters, as Maybe[ArrayRef[Str|HashRef|ScalarRef]];
+coerce BindParameters, from Str, via { [$_] }, from HashRef, via { [$_] };
+
 =type AsAliases as Maybe[ArrayRef[Str]]
 
 Represents the structure of the as argument
