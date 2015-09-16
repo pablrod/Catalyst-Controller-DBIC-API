@@ -412,6 +412,8 @@ Holds the raw (but deserialized) data for this request.
                 if exists $new->{ $controller->offset_arg };
             $self->_set_search( $new->{ $controller->search_arg } )
                 if exists $new->{ $controller->search_arg };
+            $self->_set_bind( $new->{ $controller->bind_arg } )
+                if exists $new->{ $controller->bind_arg };
         }
     );
 
