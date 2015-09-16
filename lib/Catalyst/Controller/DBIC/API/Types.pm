@@ -6,7 +6,7 @@ use strict;
 
 use MooseX::Types -declare => [
     qw( OrderedBy GroupedBy Prefetch SelectColumns AsAliases ResultSource
-        ResultSet Model SearchParameters JoinBuilder )
+        ResultSet Model SearchParameters BindParameters JoinBuilder )
 ];
 use MooseX::Types::Moose(':all');
 
